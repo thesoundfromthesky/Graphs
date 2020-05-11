@@ -40,7 +40,7 @@ class Graph:
         """
         """Breadth-first Traversal."""        
         q = Queue()
-        q.enqueue(starting_vertex_id)        
+        q.enqueue(starting_vertex)        
         # Keep track of visited nodes
         visited = set()        
         # Repeat until queue is empty
@@ -50,17 +50,31 @@ class Graph:
         	v = q.dequeue()        
         	# If it's not visited:
         	if v not in visited:
-        		# Mark visited
-        		visited.add(v)        
-        		for next_vert in self.get_neighbors(v):
-        			q.enqueue(next_vert        
+                 print(v)             
+                 # Mark visited
+                 visited.add(v)        
+                 for next_vert in self.get_neighbors(v):
+                      q.enqueue(next_vert)        
 
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        s = Stack()
+        s.push(starting_vertex)
+
+        visited = set()
+
+        while s.size() > 0:
+
+            v = s.pop()
+
+            if v not in visited:
+                print(v)
+                visited.add(v)
+                for next_vert in self.get_neighbors(v):
+                    s.push(next_vert)
 
     def dft_recursive(self, starting_vertex):
         """
