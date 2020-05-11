@@ -83,7 +83,22 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+
+        visitted = set()
+
+        def inner(v):
+            if v not in visitted:
+                 print(v)
+                 visitted.add(v)
+     
+                 for next_vert in self.get_neighbors(v):
+                     inner(next_vert)
+        
+
+        inner(starting_vertex)
+
+
+
 
     def bfs(self, starting_vertex, destination_vertex):
         """
