@@ -188,7 +188,34 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        visitted = set()
+
+        path = {}
+        for i, v in self.vertices.items():
+            if i == starting_vertex:
+                path[i] = [0, None]
+            else:
+                path[i] = [math.inf, None] 
+
+        def inner(v):
+            if v not in visitted:
+                 visitted.add(v)
+     
+                 for next_vert in self.get_neighbors(v):
+                    d = path[v][0] + 1
+                    s_d = path[next_vert][0]
+                    if d < s_d:
+                        path[next_vert]=[d, v]
+                    inner(next_vert)        
+
+        inner(starting_vertex)
+
+        result=[]
+        d_v = destination_vertex
+        while d_v:
+            result.insert(0, d_v)
+            d_v = path[d_v][1]
+        return result
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
