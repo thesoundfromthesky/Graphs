@@ -3,6 +3,8 @@ Simple graph implementation
 """
 from util import Stack, Queue  # These may come in handy
 
+import math
+
 class Graph:
 
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
@@ -98,15 +100,45 @@ class Graph:
         inner(starting_vertex)
 
 
-
-
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        q = Queue()
+
+        q.enqueue(starting_vertex)
+
+        visitted = set()
+        
+        path = {}
+        for i, v in self.vertices.items():
+            if i == starting_vertex:
+                path[i] = [0, None]
+            else:
+                path[i] = [math.inf, None] 
+
+        while q.size() > 0:
+            v = q.dequeue()
+            if v not in visitted:
+                visitted.add(v)
+       
+                for nxt_v in self.get_neighbors(v):
+                    q.enqueue(nxt_v)
+
+                    d = path[v][0] + 1
+                    s_d = path[nxt_v][0]
+                    if d < s_d:
+                        path[nxt_v]=[d, v]
+
+        result=[]
+        d_v = destination_vertex
+        while d_v:
+            result.insert(0, d_v)
+            d_v = path[d_v][1]
+        return result
+        
 
     def dfs(self, starting_vertex, destination_vertex):
         """
