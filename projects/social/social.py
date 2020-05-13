@@ -1,5 +1,5 @@
 import random
-import name
+from math import inf
 
 class User:
     def __init__(self, name):
@@ -52,20 +52,27 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
-        name_list = name.name
-        random.shuffle(name_list)
         for i in range(0, num_users):
-            self.add_user(name_list.pop())
+            self.add_user(f"User {i}")
+        # Create Frienships
+        # Generate all possible friendship combinations
+        possible_friendships = []
 
-        # Create friendships
-        for i,v in self.users.items():
-            for j in range(random.randint(0, avg_friendships)):
-                u_l = [{k:v} for k,v in self.users.items() if i != k]
-                random.shuffle(u_l)
-                u = u_l.pop()
-                key = [*u.keys()][0]  
-                self.add_friendship(i, key)
+        # Avoid duplicates by ensuring the first number is smaller than the second
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
 
+        # Shuffle the possible friendships
+        random.shuffle(possible_friendships)
+        # Create friendships for the first X pairs of the list
+        # X is determined by the formula: num_users * avg_friendships // 2
+        # Need to divide by 2 since each add_friendship() creates 2 friendships
+        for i in range(num_users * avg_friendships // 2):
+            friendship = possible_friendships[i]
+            self.add_friendship(friendship[0], friendship[1])
+
+        # self.friendships = {1: {8, 10, 5}, 2: {10, 5, 7}, 3: {4}, 4: {9, 3}, 5: {8, 1, 2}, 6: {10}, 7: {2}, 8: {1, 5}, 9: {4}, 10: {1, 2, 6}}
 
     def get_all_social_paths(self, user_id):
         """
@@ -78,6 +85,39 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+        
+        s = []
+        s.append(user_id)
+
+        l={user_id:[0, None]}
+
+        while len(s):
+            v = s.pop()
+
+            if v in visited:
+                continue
+            
+            visited[v]=[]
+
+            for nxt in self.friendships[v]:
+                s.append(nxt)
+
+                if nxt not in l:
+                    l[nxt]=[inf, None]
+              
+                d = l[v][0] + 1
+                d_s = l[nxt][0]
+                if d <= d_s:
+                    l[nxt]=[d, v]
+
+        for i in visited:
+            v = l[i][1]
+            visited[i].insert(0, i)
+
+            while v:
+                visited[i].insert(0, v)
+                v = l[v][1]                   
+        
         return visited
 
 
