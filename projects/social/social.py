@@ -1,3 +1,6 @@
+import random
+import name
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -38,6 +41,10 @@ class SocialGraph:
 
         The number of users must be greater than the average number of friendships.
         """
+        if num_users < avg_friendships:
+            print("The number of users must be greater than the average number of friendships")
+            return
+
         # Reset graph
         self.last_id = 0
         self.users = {}
@@ -45,8 +52,20 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
 
         # Add users
+        name_list = name.name
+        random.shuffle(name_list)
+        for i in range(0, num_users):
+            self.add_user(name_list.pop())
 
         # Create friendships
+        for i,v in self.users.items():
+            for j in range(random.randint(0, avg_friendships)):
+                u_l = [{k:v} for k,v in self.users.items() if i != k]
+                random.shuffle(u_l)
+                u = u_l.pop()
+                key = [*u.keys()][0]  
+                self.add_friendship(i, key)
+
 
     def get_all_social_paths(self, user_id):
         """
